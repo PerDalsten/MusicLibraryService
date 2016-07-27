@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -47,11 +48,18 @@ public class Albums {
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Album>> getAlbums() {
+	public ResponseEntity<List<Album>> getAlbums(@RequestParam(value = "artist", required = false) String artist,
+			@RequestParam(value = "title", required = false) String title,
+			@RequestParam(value = "year", required = false) Integer year) {
 		if (log.isDebugEnabled()) {
-			log.debug("getAlbums called");
+			log.debug("getAlbums called: artist=" + artist + ", title=" + title + ", year=" + year);
 		}
-		return new ResponseEntity<List<Album>>(service.getAlbums(), HttpStatus.OK);
+
+		if (artist == null && title == null && year == null) {
+			return new ResponseEntity<List<Album>>(service.getAlbums(), HttpStatus.OK);
+		} else {
+			return new ResponseEntity<List<Album>>(service.findAlbums(artist, title, year), HttpStatus.OK);
+		}
 	}
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -95,6 +95,12 @@ public class MusicLibraryService {
 	}
 
 	@Transactional(readOnly = true)
+	public List<Album> findAlbums(String artist, String title, Integer year) {
+		return albumDAO.find(artist, title, year);
+	}
+
+	
+	@Transactional(readOnly = true)
 	public Album getAlbum(Integer id) throws AlbumNotFoundException {
 		Album result = albumDAO.find(id);
 		if (result == null)
