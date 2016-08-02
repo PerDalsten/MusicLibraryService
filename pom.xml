@@ -32,7 +32,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>MusicLibrary</finalName>
+		<finalName>MusicLibraryService</finalName>
 	</build>
 
 	<dependencies>
