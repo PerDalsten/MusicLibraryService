@@ -17,8 +17,8 @@ import dk.purplegreen.musiclibrary.service.persistence.ArtistDAO;
 @Service
 public class MusicLibraryService {
 
-	final private ArtistDAO artistDAO;
-	final private AlbumDAO albumDAO;
+	private final ArtistDAO artistDAO;
+	private final AlbumDAO albumDAO;
 
 	private static final Logger log = LogManager.getLogger(MusicLibraryService.class);
 
@@ -56,8 +56,13 @@ public class MusicLibraryService {
 
 	@Transactional
 	public Artist createArtist(Artist artist) throws InvalidArtistException {
+
+		if (artist == null) {
+			throw new InvalidArtistException("Artist cannot be null");
+		}
+
 		if (log.isDebugEnabled()) {
-			log.debug("createArtist called with artist: " + (artist == null ? "null" : artist.getName()));
+			log.debug("createArtist called with artist: " + artist.getName());
 		}
 
 		artist.setId(null);
@@ -68,9 +73,12 @@ public class MusicLibraryService {
 	@Transactional
 	public Artist updateArtist(Artist artist) throws ArtistNotFoundException, InvalidArtistException {
 
+		if (artist == null) {
+			throw new InvalidArtistException("Artist cannot be null");
+		}
+
 		if (log.isDebugEnabled()) {
-			log.debug("updateArtist called with artist: "
-					+ (artist == null ? "null" : artist.getId() + "-" + artist.getName()));
+			log.debug("updateArtist called with artist: " + artist.getId() + "-" + artist.getName());
 		}
 
 		getArtist(artist.getId());
@@ -99,7 +107,6 @@ public class MusicLibraryService {
 		return albumDAO.find(artist, title, year);
 	}
 
-	
 	@Transactional(readOnly = true)
 	public Album getAlbum(Integer id) throws AlbumNotFoundException {
 		Album result = albumDAO.find(id);
@@ -118,8 +125,13 @@ public class MusicLibraryService {
 
 	@Transactional
 	public Album createAlbum(Album album) throws InvalidAlbumException {
+
+		if (album == null) {
+			throw new InvalidAlbumException("Album cannot be null");
+		}
+
 		if (log.isDebugEnabled()) {
-			log.debug("createAlbum called with artist: " + (album == null ? "null" : album.getTitle()));
+			log.debug("createAlbum called with artist: " + album.getTitle());
 		}
 
 		album.setId(null);
@@ -131,9 +143,12 @@ public class MusicLibraryService {
 	@Transactional
 	public Album updateAlbum(Album album) throws AlbumNotFoundException, InvalidAlbumException {
 
+		if (album == null) {
+			throw new InvalidAlbumException("Album cannot be null");
+		}
+
 		if (log.isDebugEnabled()) {
-			log.debug("updateAlbum called with album: "
-					+ (album == null ? "null" : album.getId() + "-" + album.getTitle()));
+			log.debug("updateAlbum called with album: " + album.getId() + "-" + album.getTitle());
 		}
 
 		getAlbum(album.getId());

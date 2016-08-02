@@ -38,12 +38,12 @@ public class Albums {
 				log.debug("getAlbum called with id: " + id);
 			}
 
-			return new ResponseEntity<Album>(service.getAlbum(id), HttpStatus.OK);
+			return new ResponseEntity<>(service.getAlbum(id), HttpStatus.OK);
 		} catch (AlbumNotFoundException e) {
 			if (log.isInfoEnabled()) {
 				log.info("Exception caught", e);
 			}
-			return new ResponseEntity<Album>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -56,9 +56,9 @@ public class Albums {
 		}
 
 		if (artist == null && title == null && year == null) {
-			return new ResponseEntity<List<Album>>(service.getAlbums(), HttpStatus.OK);
+			return new ResponseEntity<>(service.getAlbums(), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<List<Album>>(service.findAlbums(artist, title, year), HttpStatus.OK);
+			return new ResponseEntity<>(service.findAlbums(artist, title, year), HttpStatus.OK);
 		}
 	}
 
@@ -73,13 +73,13 @@ public class Albums {
 			album = service.createAlbum(album);
 		} catch (InvalidAlbumException e) {
 			log.warn("Invalid album", e);
-			return new ResponseEntity<Album>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(uriBuilder.path("/artists/{id}").buildAndExpand(album.getId()).toUri());
 
-		return new ResponseEntity<Album>(album, httpHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<>(album, httpHeaders, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -90,17 +90,22 @@ public class Albums {
 		}
 
 		try {
+
+			if (album == null) {
+				throw new InvalidAlbumException("Album cannot be null");
+			}
+
 			album.setId(id);
 			album = service.updateAlbum(album);
 		} catch (AlbumNotFoundException e) {
 			log.warn("Unknown album", e);
-			return new ResponseEntity<Album>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (InvalidAlbumException e) {
 			log.warn("Invalid album", e);
-			return new ResponseEntity<Album>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		return new ResponseEntity<Album>(album, HttpStatus.OK);
+		return new ResponseEntity<>(album, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -112,12 +117,12 @@ public class Albums {
 
 		try {
 			service.deleteAlbum(id);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (AlbumNotFoundException e) {
 			if (log.isInfoEnabled()) {
 				log.info("Exception caught", e);
 			}
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 

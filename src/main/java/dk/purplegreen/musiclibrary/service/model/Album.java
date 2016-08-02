@@ -18,16 +18,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 @Entity
 @Table(name = "ALBUM")
 @NamedQueries({ @NamedQuery(name = "findAllAlbums", query = "SELECT a FROM Album a"),
 		@NamedQuery(name = "findByArtist", query = "SELECT a FROM Album a WHERE a.artist = :artist"),
 		@NamedQuery(name = "findByTitle", query = "SELECT a FROM Album a WHERE a.title = :title") })
-public class Album  {
-	
+public class Album {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
@@ -38,11 +35,9 @@ public class Album  {
 	private String title;
 	@Column(name = "ALBUM_YEAR", nullable = false)
 	private Integer year;
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "album", orphanRemoval = true, fetch=FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "album", orphanRemoval = true, fetch = FetchType.EAGER)
 	@OrderBy("disc, track")
 	private List<Song> songs = new ArrayList<>();
-
-	private static final Logger log = LogManager.getLogger(Album.class);
 
 	public Album() {
 	}

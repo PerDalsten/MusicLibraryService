@@ -38,12 +38,12 @@ public class Artists {
 				log.debug("getArtist called with id: " + id);
 			}
 
-			return new ResponseEntity<Artist>(service.getArtist(id), HttpStatus.OK);
+			return new ResponseEntity<>(service.getArtist(id), HttpStatus.OK);
 		} catch (ArtistNotFoundException e) {
 			if (log.isInfoEnabled()) {
 				log.info("Exception caught", e);
 			}
-			return new ResponseEntity<Artist>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -52,7 +52,7 @@ public class Artists {
 		if (log.isDebugEnabled()) {
 			log.debug("getArtists called");
 		}
-		return new ResponseEntity<List<Artist>>(service.getArtists(), HttpStatus.OK);
+		return new ResponseEntity<>(service.getArtists(), HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,35 +66,39 @@ public class Artists {
 			artist = service.createArtist(artist);
 		} catch (InvalidArtistException e) {
 			log.warn("Invalid artist", e);
-			return new ResponseEntity<Artist>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(uriBuilder.path("/artists/{id}").buildAndExpand(artist.getId()).toUri());
 
-		return new ResponseEntity<Artist>(artist, httpHeaders, HttpStatus.CREATED);
+		return new ResponseEntity<>(artist, httpHeaders, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Artist> updateArtist(@PathVariable("id") Integer id, @RequestBody Artist artist) {
 
 		if (log.isDebugEnabled()) {
-			log.debug("updateArtist called with artist: "
-					+ (artist == null ? "null" : id + "-" + artist.getName()));
+			log.debug("updateArtist called with artist: " + (artist == null ? "null" : id + "-" + artist.getName()));
 		}
 
 		try {
+
+			if (artist == null) {
+				throw new InvalidArtistException("Artist cannot be null");
+			}
+
 			artist.setId(id);
 			artist = service.updateArtist(artist);
 		} catch (ArtistNotFoundException e) {
 			log.warn("Unknown artist", e);
-			return new ResponseEntity<Artist>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		} catch (InvalidArtistException e) {
 			log.warn("Invalid artist", e);
-			return new ResponseEntity<Artist>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
-		return new ResponseEntity<Artist>(artist, HttpStatus.OK);
+		return new ResponseEntity<>(artist, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
@@ -106,12 +110,12 @@ public class Artists {
 
 		try {
 			service.deleteArtist(id);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return new ResponseEntity<>(HttpStatus.OK);
 		} catch (ArtistNotFoundException e) {
 			if (log.isInfoEnabled()) {
 				log.info("Exception caught", e);
 			}
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -121,12 +125,12 @@ public class Artists {
 		log.debug("getArtistAlbums called with id: " + id);
 
 		try {
-			return new ResponseEntity<List<Album>>(service.getAlbums(service.getArtist(id)), HttpStatus.OK);
+			return new ResponseEntity<>(service.getAlbums(service.getArtist(id)), HttpStatus.OK);
 		} catch (ArtistNotFoundException e) {
 			if (log.isInfoEnabled()) {
 				log.info("Exception caught", e);
 			}
-			return new ResponseEntity<List<Album>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 		}
 	}
 }

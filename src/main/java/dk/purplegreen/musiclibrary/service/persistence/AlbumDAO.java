@@ -91,8 +91,7 @@ public class AlbumDAO {
 				hql.append(" AND ");
 			}
 
-			hql.append("a.year = :year");
-			args++;
+			hql.append("a.year = :year");			
 		}
 
 		Query<Album> query = session.createQuery(hql.toString());
@@ -109,9 +108,7 @@ public class AlbumDAO {
 			query.setParameter("year", year);
 		}
 
-		List<Album> result = query.getResultList();
-
-		return result;
+		return query.getResultList();	
 	}
 
 }
