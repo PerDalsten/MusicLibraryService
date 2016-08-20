@@ -91,9 +91,10 @@ public class AlbumDAO {
 				hql.append(" AND ");
 			}
 
-			hql.append("a.year = :year");			
+			hql.append("a.year = :year");
 		}
 
+		@SuppressWarnings("unchecked")
 		Query<Album> query = session.createQuery(hql.toString());
 
 		if (artist != null) {
@@ -108,7 +109,7 @@ public class AlbumDAO {
 			query.setParameter("year", year);
 		}
 
-		return query.getResultList();	
+		return query.getResultList();
 	}
 
 }
