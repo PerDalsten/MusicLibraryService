@@ -27,7 +27,7 @@ public class AlbumDAO {
 		if (album.getId() == null) {
 			em.persist(album);
 		} else {
-			album = (Album) em.merge(album);
+			album = em.merge(album);
 		}
 		return album;
 	}

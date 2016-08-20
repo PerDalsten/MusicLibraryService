@@ -21,7 +21,7 @@ public class ArtistDAO {
 		if (artist.getId() == null) {
 			em.persist(artist);
 		} else {
-			artist = (Artist) em.merge(artist);
+			artist = em.merge(artist);
 		}
 		return artist;
 	}
