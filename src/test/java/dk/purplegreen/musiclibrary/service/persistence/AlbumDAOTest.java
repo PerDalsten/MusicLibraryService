@@ -1,102 +1,117 @@
 package dk.purplegreen.musiclibrary.service.persistence;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import javax.persistence.EntityManager;
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaQuery;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import dk.purplegreen.musiclibrary.service.model.Album;
-import dk.purplegreen.musiclibrary.service.model.Artist;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AlbumDAOTest {
-
 	@Mock
-	SessionFactory sessionFactory;
+	private EntityManager em;
 
 	@InjectMocks
-	private AlbumDAO albumDAO;
+	private AlbumDAO albumDAO = new AlbumDAO();
 
 	@Test
 	public void testFindById() {
 
-		Session session = TestSessionFactory.getSessionFactory().openSession();
+		EntityManager testEM = TestSessionFactory.getEntityManager();
 
-		when(sessionFactory.getCurrentSession()).thenReturn(session);
+		ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
+		when(em.find(any(), argument.capture())).then(new Answer<Album>() {
+			@Override
+			public Album answer(InvocationOnMock invocation) {
+				return testEM.find(Album.class, argument.getValue());
+			}
+		});
 
 		Album album = albumDAO.find(TestSessionFactory.getParadoxId());
 
-		session.close();
+		testEM.close();
 
-		assertEquals("Wrong artist", "Paradox", album.getTitle());
+		assertNotNull("Album is null", album);
+		assertEquals("Wrong artist", "Royal Hunt", album.getArtist().getName());
 	}
 
-	@Test
-	public void testGetAllAlbums() {
-		Session session = TestSessionFactory.getSessionFactory().openSession();
-
-		when(sessionFactory.getCurrentSession()).thenReturn(session);
-
-		List<Album> albums = albumDAO.getAllAlbums();
-
-		session.close();
-
-		assertTrue("No albums", albums.size() > 0);
-	}
-
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testFindByArtist() {
 
-		Session session = TestSessionFactory.getSessionFactory().openSession();
+		EntityManager testEM = TestSessionFactory.getEntityManager();
 
-		when(sessionFactory.getCurrentSession()).thenReturn(session);
+		when(em.getCriteriaBuilder()).thenReturn(testEM.getCriteriaBuilder());
+		@SuppressWarnings("rawtypes")
+		ArgumentCaptor<CriteriaQuery> argument = ArgumentCaptor.forClass(CriteriaQuery.class);
+		when(em.createQuery(argument.capture())).then(new Answer<TypedQuery<Album>>() {
+			public TypedQuery<Album> answer(InvocationOnMock invocation) {
+				return testEM.createQuery(argument.getValue());
+			}
+		});
 
-		Artist artist = new Artist();
-		artist.setId(TestSessionFactory.getRoyalHuntId());
+		List<Album> albums = albumDAO.find("beatles", null, null);
 
-		List<Album> albums = albumDAO.findByArtist(artist);
-		session.close();
+		testEM.close();
 
-		assertEquals("Wrong number of albums", 1, albums.size());
+		assertEquals("Wrong number of results", 1, albums.size());
+		assertEquals("Wrong artist", "The Beatles", albums.get(0).getArtist().getName());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testFindSort() {
+		EntityManager testEM = TestSessionFactory.getEntityManager();
+
+		when(em.getCriteriaBuilder()).thenReturn(testEM.getCriteriaBuilder());
+		@SuppressWarnings("rawtypes")
+		ArgumentCaptor<CriteriaQuery> argument = ArgumentCaptor.forClass(CriteriaQuery.class);
+		when(em.createQuery(argument.capture())).then(new Answer<TypedQuery<Album>>() {
+			public TypedQuery<Album> answer(InvocationOnMock invocation) {
+				return testEM.createQuery(argument.getValue());
+			}
+		});
+
+		List<Album> albums = albumDAO.find(null, null, null);
+		assertEquals("Wrong artist", "AC/DC", albums.get(0).getArtist().getName());
+
+		testEM.close();
 	}
 
 	@Test
-	public void testFind() {
+	public void testCreate() {
+		Album album = new Album();
 
-		Session session = TestSessionFactory.getSessionFactory().openSession();
+		albumDAO.save(album);
 
-		when(sessionFactory.getCurrentSession()).thenReturn(session);
+		verify(em, times(0)).merge(any());
+	}
 
-		List<Album> albums = albumDAO.find(null, null, null);
+	@Test
+	public void testUpdate() {
+		Album album = new Album();
+		album.setId(42);
 
-		assertTrue("Wrong number of albums", albums.size() >= 3);
+		albumDAO.save(album);
 
-		albums = albumDAO.find("royal", null, null);
-
-		assertEquals("Wrong number of albums", 1, albums.size());
-		
-		albums = albumDAO.find(null, "THOSE", null);
-
-		assertEquals("Wrong number of albums", 1, albums.size());
-		
-		albums = albumDAO.find(null, "THOSE", 1969);
-
-		assertEquals("Wrong number of albums", 0, albums.size());
-
-		albums = albumDAO.find("beatles", "abbey", 1969);
-
-		assertEquals("Wrong number of albums", 1, albums.size());
-		
-		session.close();
-
+		verify(em, times(1)).merge(any());
 	}
 }

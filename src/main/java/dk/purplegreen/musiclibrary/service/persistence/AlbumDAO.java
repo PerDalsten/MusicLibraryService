@@ -1,13 +1,16 @@
 package dk.purplegreen.musiclibrary.service.persistence;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import dk.purplegreen.musiclibrary.service.model.Album;
@@ -16,100 +19,60 @@ import dk.purplegreen.musiclibrary.service.model.Artist;
 @Repository
 public class AlbumDAO {
 
-	@Autowired
-	private SessionFactory sessionFactory;
+	@PersistenceContext
+	private EntityManager em;
 
 	public Album save(Album album) {
 
-		Session session = sessionFactory.getCurrentSession();
-
 		if (album.getId() == null) {
-			session.persist(album);
+			em.persist(album);
 		} else {
-			album = (Album) session.merge(album);
+			album = (Album) em.merge(album);
 		}
 		return album;
 	}
 
 	public Album find(Integer id) {
-		Session session = sessionFactory.getCurrentSession();
-		return session.find(Album.class, id);
+		return em.find(Album.class, id);
 	}
 
 	public void delete(Album album) {
-		Session session = sessionFactory.getCurrentSession();
-		session.remove(session.merge(album));
+		em.remove(em.merge(album));
 	}
 
 	public List<Album> getAllAlbums() {
-		Session session = sessionFactory.getCurrentSession();
-		TypedQuery<Album> query = session.createNamedQuery("findAllAlbums", Album.class);
+		TypedQuery<Album> query = em.createNamedQuery("findAllAlbums", Album.class);
 		return query.getResultList();
 	}
 
 	public List<Album> findByArtist(Artist artist) {
-		Session session = sessionFactory.getCurrentSession();
-		TypedQuery<Album> query = session.createNamedQuery("findByArtist", Album.class);
+		TypedQuery<Album> query = em.createNamedQuery("findByArtist", Album.class);
 		query.setParameter("artist", artist);
 		return query.getResultList();
 	}
 
 	public List<Album> find(String artist, String title, Integer year) {
 
-		Session session = sessionFactory.getCurrentSession();
+		CriteriaBuilder cb = em.getCriteriaBuilder();
+		CriteriaQuery<Album> cq = cb.createQuery(Album.class);
+		Root<Album> album = cq.from(Album.class);
 
-		StringBuilder hql = new StringBuilder("FROM Album a");
+		List<Predicate> predicates = new ArrayList<>();
 
-		int args = 0;
-
-		if (artist != null) {
-			if (args == 0) {
-				hql.append(" WHERE ");
-			} else {
-				hql.append(" AND ");
-			}
-
-			hql.append("LOWER(a.artist.name) LIKE :artist");
-			args++;
+		if (artist != null && !artist.isEmpty()) {
+			predicates.add(cb.like(cb.lower(album.get("artist").get("name")), "%" + artist.toLowerCase() + "%"));
 		}
-
-		if (title != null) {
-			if (args == 0) {
-				hql.append(" WHERE ");
-			} else {
-				hql.append(" AND ");
-			}
-
-			hql.append("LOWER(a.title) LIKE :title");
-			args++;
+		if (title != null && !title.isEmpty()) {
+			predicates.add(cb.like(cb.lower(album.get("title")), "%" + title.toLowerCase() + "%"));
 		}
-
 		if (year != null) {
-			if (args == 0) {
-				hql.append(" WHERE ");
-			} else {
-				hql.append(" AND ");
-			}
-
-			hql.append("a.year = :year");
+			predicates.add(cb.equal(album.get("year"), year));
 		}
 
-		@SuppressWarnings("unchecked")
-		Query<Album> query = session.createQuery(hql.toString());
+		cq.select(album).where(predicates.toArray(new Predicate[predicates.size()]));
+		cq.orderBy(cb.asc(album.get("artist").get("name")), cb.asc(album.get("title")));
 
-		if (artist != null) {
-			query.setParameter("artist", "%" + artist.toLowerCase() + "%");
-		}
-
-		if (title != null) {
-			query.setParameter("title", "%" + title.toLowerCase() + "%");
-		}
-
-		if (year != null) {
-			query.setParameter("year", year);
-		}
-
-		return query.getResultList();
+		return em.createQuery(cq).getResultList();
 	}
 
 }

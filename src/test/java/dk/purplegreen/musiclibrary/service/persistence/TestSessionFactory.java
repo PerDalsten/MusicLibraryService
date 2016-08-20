@@ -1,5 +1,7 @@
 package dk.purplegreen.musiclibrary.service.persistence;
 
+import javax.persistence.EntityManager;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
@@ -20,7 +22,7 @@ public class TestSessionFactory {
 	private static final Logger log = LogManager.getLogger(TestSessionFactory.class);
 
 	private static SessionFactory sessionFactory;
-	
+
 	private static Integer royalHuntId;
 	private static Integer paradoxId;
 
@@ -31,7 +33,7 @@ public class TestSessionFactory {
 	public static Integer getParadoxId() {
 		return paradoxId;
 	}
-	
+
 	public static synchronized SessionFactory getSessionFactory() {
 
 		if (sessionFactory == null) {
@@ -39,11 +41,11 @@ public class TestSessionFactory {
 			final StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
 			try {
 				sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
-								
-				//XXX Add shutdown hook to close factory?
-				
+
+				// XXX Add shutdown hook to close factory?
+
 				createData();
-				
+
 			} catch (Exception e) {
 				log.error("Error creating session factory", e);
 				StandardServiceRegistryBuilder.destroy(registry);
@@ -52,14 +54,21 @@ public class TestSessionFactory {
 
 		return sessionFactory;
 	}
-	
-	private static void createData(){
-		
+
+	public static EntityManager getEntityManager() {
+
+		Session session = getSessionFactory().openSession();
+
+		return session.unwrap(EntityManager.class);
+	}
+
+	private static void createData() {
+
 		log.debug("Creating data");
-		
+
 		Session session = sessionFactory.openSession();
 		session.beginTransaction();
-		
+
 		Artist artist = new Artist("The Beatles");
 		session.persist(artist);
 
@@ -121,7 +130,7 @@ public class TestSessionFactory {
 		song.setTitle("The Awakening");
 		song.setDisc(1);
 		song.setTrack(1);
-		song.setAlbum(album);		
+		song.setAlbum(album);
 		album.addSong(song);
 
 		song = new Song();
@@ -132,12 +141,12 @@ public class TestSessionFactory {
 		album.addSong(song);
 
 		session.persist(album);
-		
+
 		session.getTransaction().commit();
-		
+
 		royalHuntId = artist.getId();
 		paradoxId = album.getId();
-	
+
 		session.close();
 	}
 }
