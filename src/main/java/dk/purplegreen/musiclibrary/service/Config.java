@@ -5,6 +5,8 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +25,8 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource(value = { "classpath:musiclibraryservice.properties" })
 public class Config {
 
+	private static final Logger log = LogManager.getLogger(Config.class);
+
 	@Autowired
 	private Environment environment;
 
@@ -37,6 +41,13 @@ public class Config {
 
 	private DataSource dataSource() {
 		BasicDataSource dataSource = new BasicDataSource();
+
+		if (log.isDebugEnabled()) {
+			log.debug("Configuring datasource:->");
+			log.debug("Driver: " + environment.getRequiredProperty("jdbc.driverClassName"));
+			log.debug("URL: " + environment.getRequiredProperty("jdbc.url"));
+			log.debug("Username: " + environment.getRequiredProperty("jdbc.username"));
+		}
 
 		dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
 		dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));

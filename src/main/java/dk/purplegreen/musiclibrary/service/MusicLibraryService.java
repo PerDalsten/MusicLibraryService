@@ -104,11 +104,21 @@ public class MusicLibraryService {
 
 	@Transactional(readOnly = true)
 	public List<Album> findAlbums(String artist, String title, Integer year) {
+
+		if (log.isDebugEnabled()) {
+			log.debug("findAlbums called: artist=" + artist + ", title=" + title + ", year=" + year);
+		}
+
 		return albumDAO.find(artist, title, year);
 	}
 
 	@Transactional(readOnly = true)
 	public Album getAlbum(Integer id) throws AlbumNotFoundException {
+
+		if (log.isDebugEnabled()) {
+			log.debug("getAlbum() called with id: " + id);
+		}
+
 		Album result = albumDAO.find(id);
 		if (result == null)
 			throw new AlbumNotFoundException("Album with id: " + id + " does not exist.");
