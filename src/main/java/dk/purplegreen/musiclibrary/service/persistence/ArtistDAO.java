@@ -2,11 +2,10 @@ package dk.purplegreen.musiclibrary.service.persistence;
 
 import java.util.List;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import dk.purplegreen.musiclibrary.service.model.Artist;
@@ -14,34 +13,29 @@ import dk.purplegreen.musiclibrary.service.model.Artist;
 @Repository
 public class ArtistDAO {
 
-	@Autowired
-	private SessionFactory sessionFactory;
+	@PersistenceContext
+	private EntityManager em;
 
 	public Artist save(Artist artist) {
 
-		Session session = sessionFactory.getCurrentSession();
-
 		if (artist.getId() == null) {
-			session.persist(artist);
+			em.persist(artist);
 		} else {
-			artist = (Artist) session.merge(artist);
+			artist = em.merge(artist);
 		}
 		return artist;
 	}
 
 	public Artist find(Integer id) {
-		Session session = sessionFactory.getCurrentSession();
-		return session.find(Artist.class, id);
+		return em.find(Artist.class, id);
 	}
 
 	public void delete(Artist artist) {
-		Session session = sessionFactory.getCurrentSession();
-		session.remove(session.merge(artist));
+		em.remove(em.merge(artist));
 	}
 
 	public List<Artist> getAllArtists() {
-		Session session = sessionFactory.getCurrentSession();
-		TypedQuery<Artist> query = session.createNamedQuery("findAllArtists", Artist.class);
+		TypedQuery<Artist> query = em.createNamedQuery("findAllArtists", Artist.class);
 		return query.getResultList();
 	}
 }
