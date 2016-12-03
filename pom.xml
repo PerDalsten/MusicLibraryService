@@ -5,10 +5,10 @@
 	<groupId>dk.purplegreen.musiclibrary</groupId>
 	<artifactId>MusicLibraryService</artifactId>
 	<packaging>war</packaging>
-	<version>1.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 
 	<name>MusicLibraryService</name>
-	<url>http://www.purplegreen.dk/musiclibrary</url>
+	<url>http://www.purplegreen.dk/musiclibraryservice</url>
 
 	<properties>
 		<springframework.version>4.3.1.RELEASE</springframework.version>

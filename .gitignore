@@ -11,6 +11,7 @@ logs
 .project
 
 .factorypath
+.tern-project
 
 /.apt_generated/
 
