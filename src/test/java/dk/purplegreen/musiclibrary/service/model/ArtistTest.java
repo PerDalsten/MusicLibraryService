@@ -5,28 +5,22 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
-import dk.purplegreen.musiclibrary.service.persistence.TestSessionFactory;
+import dk.purplegreen.musiclibrary.test.Database;
 
 public class ArtistTest {
 
-	private SessionFactory sessionFactory;
-
-	@Before
-	public void setUp() throws Exception {
-
-		sessionFactory = TestSessionFactory.getSessionFactory();
-	}
+	@Rule
+	public Database database = new Database();
 
 	@Test
 	public void testCRUD() {
 
 		Artist artist = new Artist("Black Sabbath");
 
-		Session session = sessionFactory.openSession();
+		Session session = database.getSessionFactory().openSession();
 		session.beginTransaction();
 
 		session.save(artist);
@@ -36,7 +30,7 @@ public class ArtistTest {
 
 		assertNotNull("Artist id is null", artist.getId());
 
-		session = sessionFactory.openSession();
+		session = database.getSessionFactory().openSession();
 		session.beginTransaction();
 		artist = session.find(Artist.class, artist.getId());
 
@@ -49,7 +43,7 @@ public class ArtistTest {
 		session.getTransaction().commit();
 		session.close();
 
-		session = sessionFactory.openSession();
+		session = database.getSessionFactory().openSession();
 		session.beginTransaction();
 		artist = session.find(Artist.class, artist.getId());
 
@@ -61,7 +55,7 @@ public class ArtistTest {
 		session.getTransaction().commit();
 		session.close();
 
-		session = sessionFactory.openSession();
+		session = database.getSessionFactory().openSession();
 
 		artist = session.find(Artist.class, artist.getId());
 		assertNull("Artist is not null", artist);

@@ -9,8 +9,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -20,11 +19,14 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
 
-import dk.purplegreen.musiclibrary.service.model.Album;
 import dk.purplegreen.musiclibrary.service.model.Artist;
+import dk.purplegreen.musiclibrary.test.Database;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ArtistDAOTest {
+
+	@Rule
+	public Database database = new Database();
 
 	@Mock
 	private EntityManager em;
@@ -35,19 +37,15 @@ public class ArtistDAOTest {
 	@Test
 	public void testFind() {
 
-		EntityManager testEM = TestSessionFactory.getEntityManager();
-
 		ArgumentCaptor<Integer> argument = ArgumentCaptor.forClass(Integer.class);
 		when(em.find(any(), argument.capture())).then(new Answer<Artist>() {
 			@Override
 			public Artist answer(InvocationOnMock invocation) {
-				return testEM.find(Artist.class, argument.getValue());
+				return database.getEntityManager().find(Artist.class, argument.getValue());
 			}
 		});
 
-		Artist artist = artistDAO.find(TestSessionFactory.getRoyalHuntId());
-
-		testEM.close();
+		Artist artist = artistDAO.find(2);
 
 		assertEquals("Wrong artist", "Royal Hunt", artist.getName());
 	}
@@ -55,14 +53,10 @@ public class ArtistDAOTest {
 	@Test
 	public void testGetAllArtists() {
 
-		EntityManager testEM = TestSessionFactory.getEntityManager();
-
 		when(em.createNamedQuery("findAllArtists", Artist.class))
-				.thenReturn(testEM.createNamedQuery("findAllArtists", Artist.class));
+				.thenReturn(database.getEntityManager().createNamedQuery("findAllArtists", Artist.class));
 
 		List<Artist> artists = artistDAO.getAllArtists();
-
-		testEM.close();
 
 		assertTrue("No artists", artists.size() > 0);
 	}

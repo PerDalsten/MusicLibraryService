@@ -8,25 +8,20 @@ import java.util.List;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 
-import dk.purplegreen.musiclibrary.service.persistence.TestSessionFactory;
+import dk.purplegreen.musiclibrary.test.Database;
 
 public class AlbumTest {
 
-	private SessionFactory sessionFactory;
-
-	@Before
-	public void setUp() throws Exception {
-		sessionFactory = TestSessionFactory.getSessionFactory();
-	}
+	@Rule
+	public Database database = new Database();
 
 	@Test
 	public void testCreateAlbum() {
 
-		Session session = sessionFactory.openSession();
+		Session session = database.getSessionFactory().openSession();
 		session.beginTransaction();
 
 		Artist artist = new Artist("Thin Lizzy");
@@ -66,7 +61,7 @@ public class AlbumTest {
 	@Test
 	public void testFindAllAlbums() {
 
-		Session session = sessionFactory.openSession();
+		Session session = database.getSessionFactory().openSession();
 
 		TypedQuery<Album> query = session.createNamedQuery("findAllAlbums", Album.class);
 		List<Album> result = query.getResultList();
@@ -76,9 +71,9 @@ public class AlbumTest {
 
 	@Test
 	public void testFindByArtist() {
-		Session session = sessionFactory.openSession();
+		Session session = database.getSessionFactory().openSession();
 
-		Artist rh = session.find(Artist.class, TestSessionFactory.getRoyalHuntId());
+		Artist rh = session.find(Artist.class, 2);
 
 		TypedQuery<Album> query = session.createNamedQuery("findByArtist", Album.class);
 		query.setParameter("artist", rh);
@@ -94,7 +89,7 @@ public class AlbumTest {
 	@Test
 	public void testFindByTitle() {
 
-		Session session = sessionFactory.openSession();
+		Session session = database.getSessionFactory().openSession();
 
 		TypedQuery<Album> query = session.createNamedQuery("findByTitle", Album.class);
 		query.setParameter("title", "Paradox");
@@ -110,7 +105,7 @@ public class AlbumTest {
 	@Test
 	public void testCascade() {
 
-		Session session = sessionFactory.openSession();
+		Session session = database.getSessionFactory().openSession();
 		session.beginTransaction();
 
 		Artist artist = new Artist("Testament");
