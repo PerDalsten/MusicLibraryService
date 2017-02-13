@@ -3,4 +3,11 @@
 	xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
 	version="3.1">
   <display-name>MusicLibraryService</display-name>
+  
+  <resource-ref>
+		<description>MusicLibrary Datasource</description>
+		<res-ref-name>jdbc/MusicLibraryDS</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
 </web-app>

@@ -5,16 +5,15 @@ import java.util.Properties;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.jndi.JndiTemplate;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -44,23 +43,22 @@ public class Config {
 		em.setJpaProperties(hibernateProperties());
 		return em;
 	}
-
+	
 	private DataSource dataSource() {
-		BasicDataSource dataSource = new BasicDataSource();
+		DataSource dataSource = null;
+		JndiTemplate jndi = new JndiTemplate();
 
-		if (log.isDebugEnabled()) {
-			log.debug("Configuring datasource:->");
-			log.debug("Driver: " + environment.getRequiredProperty("jdbc.driverClassName"));
-			log.debug("URL: " + environment.getRequiredProperty("jdbc.url"));
-			log.debug("Username: " + environment.getRequiredProperty("jdbc.username"));
+		try {
+			dataSource = (DataSource) jndi.lookup("java:comp/env/jdbc/MusicLibraryDS");			
+			log.info("Got datasource");
+			
+		} catch (Exception e) {
+			log.error("Exception looking up datasource", e);
 		}
 
-		dataSource.setDriverClassName(environment.getRequiredProperty("jdbc.driverClassName"));
-		dataSource.setUrl(environment.getRequiredProperty("jdbc.url"));
-		dataSource.setUsername(environment.getRequiredProperty("jdbc.username"));
-		dataSource.setPassword(environment.getRequiredProperty("jdbc.password"));
 		return dataSource;
 	}
+	
 
 	private Properties hibernateProperties() {
 		Properties properties = new Properties();
