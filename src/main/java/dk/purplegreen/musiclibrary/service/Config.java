@@ -49,7 +49,7 @@ public class Config {
 		JndiTemplate jndi = new JndiTemplate();
 
 		try {
-			dataSource = (DataSource) jndi.lookup("java:comp/env/jdbc/MusicLibraryDS");			
+			dataSource = (DataSource) jndi.lookup(environment.getRequiredProperty("datasource.jndi"));			
 			log.info("Got datasource");
 			
 		} catch (Exception e) {
