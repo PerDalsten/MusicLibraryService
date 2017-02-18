@@ -18,6 +18,10 @@ JNDI Data Source Setup
 
 Tomcat:
 
+Copy $JAVA_HOME/db/lib/derbyclient.jar $CATALINA_HOME/lib
+
+(and cp $JAVA_HOME/db/lib/derbyLocale*.jar $CATALINA_HOME/lib to avoid warnings).
+
 server.xml:
     <Resource auth="Container" driverClassName="org.apache.derby.jdbc.ClientDriver" maxIdle="10" maxTotal="20" maxWaitMillis="-1" type="javax.sql.DataSource" url="jdbc:derby://localhost:1527/musiclibrarydb" name="jdbc/MusicLibraryDS" username="musiclibrary" password="test"  />
 
@@ -27,8 +31,10 @@ context.xml:
 	
 Liberty:
 
+Copy $JAVA_HOME/db/lib/derbyclient.jar  to WLP server lib/derby  
+
 	<library id="DerbyLib">
-		<fileset dir="${server.config.dir}/lib" includes="*.jar"/>
+		<fileset dir="${server.config.dir}/lib/derby" includes="*.jar"/>
 	</library>
 	<dataSource jndiName="jdbc/MusicLibraryDS">
 		<jdbcDriver libraryRef="DerbyLib"/>
@@ -37,6 +43,8 @@ Liberty:
 	
 	
 Wildfly:	
+
+Install $JAVA_HOME/db/lib/derbyclient.jar as module/driver 'derby'.
 
     <datasource jndi-name="java:/jdbc/MusicLibraryDS" pool-name="MusicLibrary">
 		<connection-url>jdbc:derby://localhost:1527/musiclibrarydb</connection-url>
