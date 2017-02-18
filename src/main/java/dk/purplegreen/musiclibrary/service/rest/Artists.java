@@ -32,19 +32,13 @@ public class Artists {
 	private MusicLibraryService service;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Artist> getArtist(@PathVariable("id") Integer id) {
-		try {
-			if (log.isDebugEnabled()) {
-				log.debug("getArtist called with id: " + id);
-			}
+	public ResponseEntity<Artist> getArtist(@PathVariable("id") Integer id) throws ArtistNotFoundException {
 
-			return new ResponseEntity<>(service.getArtist(id), HttpStatus.OK);
-		} catch (ArtistNotFoundException e) {
-			if (log.isInfoEnabled()) {
-				log.info("Exception caught", e);
-			}
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		if (log.isDebugEnabled()) {
+			log.debug("getArtist called with id: " + id);
 		}
+
+		return new ResponseEntity<>(service.getArtist(id), HttpStatus.OK);
 	}
 
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,18 +50,13 @@ public class Artists {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Artist> createArtist(@RequestBody Artist artist, UriComponentsBuilder uriBuilder) {
+	public ResponseEntity<Artist> createArtist(@RequestBody Artist artist, UriComponentsBuilder uriBuilder)
+			throws InvalidArtistException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("createArtist called with artist: " + (artist == null ? "null" : artist.getName()));
 		}
-
-		try {
-			artist = service.createArtist(artist);
-		} catch (InvalidArtistException e) {
-			log.warn("Invalid artist", e);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-		}
+		artist = service.createArtist(artist);
 
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setLocation(uriBuilder.path("/artists/{id}").buildAndExpand(artist.getId()).toUri());
@@ -76,61 +65,40 @@ public class Artists {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Artist> updateArtist(@PathVariable("id") Integer id, @RequestBody Artist artist) {
+	public ResponseEntity<Artist> updateArtist(@PathVariable("id") Integer id, @RequestBody Artist artist)
+			throws InvalidArtistException, ArtistNotFoundException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("updateArtist called with artist: " + (artist == null ? "null" : id + "-" + artist.getName()));
 		}
 
-		try {
-
-			if (artist == null) {
-				throw new InvalidArtistException("Artist cannot be null");
-			}
-
-			artist.setId(id);
-			artist = service.updateArtist(artist);
-		} catch (ArtistNotFoundException e) {
-			log.warn("Unknown artist", e);
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		} catch (InvalidArtistException e) {
-			log.warn("Invalid artist", e);
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		if (artist == null) {
+			throw new InvalidArtistException("Artist cannot be null");
 		}
+
+		artist.setId(id);
+		artist = service.updateArtist(artist);
 
 		return new ResponseEntity<>(artist, HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> deleteArtist(@PathVariable("id") Integer id) {
+	public ResponseEntity<Void> deleteArtist(@PathVariable("id") Integer id)
+			throws ArtistNotFoundException, InvalidArtistException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("deleteArtist called with id: " + id);
 		}
 
-		try {
-			service.deleteArtist(id);
-			return new ResponseEntity<>(HttpStatus.OK);
-		} catch (ArtistNotFoundException e) {
-			if (log.isInfoEnabled()) {
-				log.info("Exception caught", e);
-			}
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		service.deleteArtist(id);
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	@RequestMapping(value = "/{id}/albums", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Album>> getArtistAlbums(@PathVariable("id") Integer id) {
+	public ResponseEntity<List<Album>> getArtistAlbums(@PathVariable("id") Integer id) throws ArtistNotFoundException {
 
 		log.debug("getArtistAlbums called with id: " + id);
 
-		try {
-			return new ResponseEntity<>(service.getAlbums(service.getArtist(id)), HttpStatus.OK);
-		} catch (ArtistNotFoundException e) {
-			if (log.isInfoEnabled()) {
-				log.info("Exception caught", e);
-			}
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
+		return new ResponseEntity<>(service.getAlbums(service.getArtist(id)), HttpStatus.OK);
 	}
 }

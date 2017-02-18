@@ -1,7 +1,9 @@
 package dk.purplegreen.musiclibrary.service.rest;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -28,6 +30,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import dk.purplegreen.musiclibrary.service.AlbumNotFoundException;
+import dk.purplegreen.musiclibrary.service.InvalidAlbumException;
 import dk.purplegreen.musiclibrary.service.MusicLibraryService;
 import dk.purplegreen.musiclibrary.service.model.Album;
 
@@ -52,7 +55,7 @@ public class AlbumsTest {
 	@Before
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
-		mockMvc = MockMvcBuilders.standaloneSetup(albums).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(albums).setControllerAdvice(new RestExceptionHandler()).build();
 	}
 
 	@Test
@@ -90,6 +93,23 @@ public class AlbumsTest {
 	public void testGetNonExistingAlbum() throws Exception {
 		when(service.getAlbum(0)).thenThrow(new AlbumNotFoundException());
 
-		mockMvc.perform(get("/albums/0").accept(MediaType.APPLICATION_JSON)).andExpect(status().is4xxClientError());
+		mockMvc.perform(get("/albums/0").accept(MediaType.APPLICATION_JSON)).andExpect(status().isNotFound());
+	}
+
+	@Test
+	public void testInvalidAlbum() throws Exception {
+
+		when(service.createAlbum(any(Album.class))).thenThrow(new InvalidAlbumException());
+
+		mockMvc.perform(post("/albums").contentType(MediaType.APPLICATION_JSON).content("{}"))
+				.andExpect(status().is4xxClientError());
+	}
+
+	@Test
+	public void testInternalError() throws Exception {
+		when(service.getAlbum(-1)).thenThrow(new IllegalArgumentException());
+
+		mockMvc.perform(get("/albums/-1").accept(MediaType.APPLICATION_JSON))
+				.andExpect(status().isInternalServerError());
 	}
 }
