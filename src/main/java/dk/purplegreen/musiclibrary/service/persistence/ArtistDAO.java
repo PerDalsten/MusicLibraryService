@@ -31,7 +31,7 @@ public class ArtistDAO {
 	}
 
 	public void delete(Artist artist) {
-		em.remove(em.merge(artist));
+		em.remove(artist);
 	}
 
 	public List<Artist> getAllArtists() {

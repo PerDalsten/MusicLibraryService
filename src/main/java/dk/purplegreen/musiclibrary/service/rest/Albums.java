@@ -97,7 +97,7 @@ public class Albums {
 			log.debug("deleteAlbum called with id: " + id);
 		}
 
-		service.deleteAlbum(id);
+		service.deleteAlbum(service.getAlbum(id));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

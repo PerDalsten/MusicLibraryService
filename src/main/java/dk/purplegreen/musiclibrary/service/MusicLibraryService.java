@@ -87,17 +87,17 @@ public class MusicLibraryService {
 	}
 
 	@Transactional
-	public void deleteArtist(Integer id)
+	public void deleteArtist(Artist artist)
 			throws ArtistNotFoundException, dk.purplegreen.musiclibrary.service.InvalidArtistException {
 
-		Artist artist = getArtist(id);
+		artist = getArtist(artist.getId());
 
 		if (albumDAO.getArtistAlbumCount(artist) > 0) {
 			throw new InvalidArtistException("Artist has albums and cannot be deleted");
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("deleteArtist() called with id: " + id);
+			log.debug("deleteArtist() called with id: " + artist.getId());
 		}
 		artistDAO.delete(artist);
 	}
@@ -176,11 +176,11 @@ public class MusicLibraryService {
 	}
 
 	@Transactional
-	public void deleteAlbum(Integer id) throws AlbumNotFoundException {
+	public void deleteAlbum(Album album) throws AlbumNotFoundException {
 		if (log.isDebugEnabled()) {
-			log.debug("deleteAlbum() called with id: " + id);
+			log.debug("deleteAlbum() called with id: " + album.getId());
 		}
-		albumDAO.delete(getAlbum(id));
+		albumDAO.delete(getAlbum(album.getId()));
 	}
 
 	private void attachSongs(Album album) {

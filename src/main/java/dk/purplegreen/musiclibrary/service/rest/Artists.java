@@ -90,7 +90,7 @@ public class Artists {
 			log.debug("deleteArtist called with id: " + id);
 		}
 
-		service.deleteArtist(id);
+		service.deleteArtist(service.getArtist(id));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
