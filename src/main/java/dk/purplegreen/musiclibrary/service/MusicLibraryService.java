@@ -103,7 +103,10 @@ public class MusicLibraryService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Album> getAlbums(Artist artist) {
+	public List<Album> getAlbums(Artist artist) throws ArtistNotFoundException {
+		
+		artist = getArtist(artist.getId());
+		
 		if (log.isDebugEnabled()) {
 			log.debug("getAlbums() called for artist: " + artist.getName());
 		}

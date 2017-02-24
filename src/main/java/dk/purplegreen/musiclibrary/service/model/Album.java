@@ -42,6 +42,10 @@ public class Album {
 	public Album() {
 	}
 
+	public Album(Integer id) {
+		this.id = id;
+	}
+
 	public Album(Artist artist, String title, Integer year) {
 		this.artist = artist;
 		this.title = title;

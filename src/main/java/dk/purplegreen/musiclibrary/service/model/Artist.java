@@ -23,6 +23,10 @@ public class Artist {
 	public Artist() {
 	}
 
+	public Artist(Integer id) {
+		this.id = id;
+	}
+
 	public Artist(String name) {
 		this.name = name;
 	}

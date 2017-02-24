@@ -90,7 +90,7 @@ public class Artists {
 			log.debug("deleteArtist called with id: " + id);
 		}
 
-		service.deleteArtist(service.getArtist(id));
+		service.deleteArtist(new Artist(id));
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
@@ -99,6 +99,6 @@ public class Artists {
 
 		log.debug("getArtistAlbums called with id: " + id);
 
-		return new ResponseEntity<>(service.getAlbums(service.getArtist(id)), HttpStatus.OK);
+		return new ResponseEntity<>(service.getAlbums(new Artist(id)), HttpStatus.OK);
 	}
 }
