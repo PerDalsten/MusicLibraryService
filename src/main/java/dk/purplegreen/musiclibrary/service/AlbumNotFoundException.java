@@ -1,6 +1,6 @@
 package dk.purplegreen.musiclibrary.service;
 
-public class AlbumNotFoundException extends Exception {
+public class AlbumNotFoundException extends MusicLibraryServiceException {
 
 	private static final long serialVersionUID = 1068842211143817698L;
 

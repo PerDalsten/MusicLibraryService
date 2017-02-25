@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import dk.purplegreen.musiclibrary.service.AlbumNotFoundException;
 import dk.purplegreen.musiclibrary.service.InvalidAlbumException;
 import dk.purplegreen.musiclibrary.service.MusicLibraryService;
+import dk.purplegreen.musiclibrary.service.MusicLibraryServiceException;
 import dk.purplegreen.musiclibrary.service.model.Album;
 
 @RestController
@@ -32,7 +32,7 @@ public class Albums {
 	private MusicLibraryService service;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Album> getAlbum(@PathVariable("id") Integer id) throws AlbumNotFoundException {
+	public ResponseEntity<Album> getAlbum(@PathVariable("id") Integer id) throws MusicLibraryServiceException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("getAlbum called with id: " + id);
@@ -58,7 +58,7 @@ public class Albums {
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Album> createAlbum(@RequestBody Album album, UriComponentsBuilder uriBuilder)
-			throws InvalidAlbumException {
+			throws MusicLibraryServiceException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("createAlbum called with album: " + (album == null ? "null" : album.getTitle()));
@@ -74,7 +74,7 @@ public class Albums {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Album> updateAlbum(@PathVariable("id") Integer id, @RequestBody Album album)
-			throws InvalidAlbumException, AlbumNotFoundException {
+			throws MusicLibraryServiceException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("updateAlbum called with album: " + (album == null ? "null" : id + "-" + album.getTitle()));
@@ -91,7 +91,7 @@ public class Albums {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseEntity<Void> deleteAlbum(@PathVariable("id") Integer id) throws AlbumNotFoundException {
+	public ResponseEntity<Void> deleteAlbum(@PathVariable("id") Integer id) throws MusicLibraryServiceException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("deleteAlbum called with id: " + id);

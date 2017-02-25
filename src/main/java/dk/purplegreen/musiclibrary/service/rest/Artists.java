@@ -16,9 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import dk.purplegreen.musiclibrary.service.ArtistNotFoundException;
 import dk.purplegreen.musiclibrary.service.InvalidArtistException;
 import dk.purplegreen.musiclibrary.service.MusicLibraryService;
+import dk.purplegreen.musiclibrary.service.MusicLibraryServiceException;
 import dk.purplegreen.musiclibrary.service.model.Album;
 import dk.purplegreen.musiclibrary.service.model.Artist;
 
@@ -32,7 +32,7 @@ public class Artists {
 	private MusicLibraryService service;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<Artist> getArtist(@PathVariable("id") Integer id) throws ArtistNotFoundException {
+	public ResponseEntity<Artist> getArtist(@PathVariable("id") Integer id) throws MusicLibraryServiceException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("getArtist called with id: " + id);
@@ -51,7 +51,7 @@ public class Artists {
 
 	@RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Artist> createArtist(@RequestBody Artist artist, UriComponentsBuilder uriBuilder)
-			throws InvalidArtistException {
+			throws MusicLibraryServiceException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("createArtist called with artist: " + (artist == null ? "null" : artist.getName()));
@@ -66,7 +66,7 @@ public class Artists {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.PUT, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<Artist> updateArtist(@PathVariable("id") Integer id, @RequestBody Artist artist)
-			throws InvalidArtistException, ArtistNotFoundException {
+			throws MusicLibraryServiceException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("updateArtist called with artist: " + (artist == null ? "null" : id + "-" + artist.getName()));
@@ -84,7 +84,7 @@ public class Artists {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
 	public ResponseEntity<Void> deleteArtist(@PathVariable("id") Integer id)
-			throws ArtistNotFoundException, InvalidArtistException {
+			throws MusicLibraryServiceException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("deleteArtist called with id: " + id);
@@ -95,7 +95,7 @@ public class Artists {
 	}
 
 	@RequestMapping(value = "/{id}/albums", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<Album>> getArtistAlbums(@PathVariable("id") Integer id) throws ArtistNotFoundException {
+	public ResponseEntity<List<Album>> getArtistAlbums(@PathVariable("id") Integer id) throws MusicLibraryServiceException {
 
 		log.debug("getArtistAlbums called with id: " + id);
 
