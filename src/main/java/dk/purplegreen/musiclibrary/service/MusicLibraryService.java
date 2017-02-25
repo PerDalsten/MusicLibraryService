@@ -43,7 +43,7 @@ public class MusicLibraryService {
 	}
 
 	@Transactional(readOnly = true)
-	public Artist getArtist(Integer id) throws ArtistNotFoundException {
+	public Artist getArtist(Integer id) throws MusicLibraryServiceException {
 		if (log.isDebugEnabled()) {
 			log.debug("getArtist() called with id: " + id);
 		}
@@ -55,7 +55,7 @@ public class MusicLibraryService {
 	}
 
 	@Transactional
-	public Artist createArtist(Artist artist) throws InvalidArtistException {
+	public Artist createArtist(Artist artist) throws MusicLibraryServiceException {
 
 		if (artist == null) {
 			throw new InvalidArtistException("Artist cannot be null");
@@ -71,7 +71,7 @@ public class MusicLibraryService {
 	}
 
 	@Transactional
-	public Artist updateArtist(Artist artist) throws ArtistNotFoundException, InvalidArtistException {
+	public Artist updateArtist(Artist artist) throws MusicLibraryServiceException {
 
 		if (artist == null) {
 			throw new InvalidArtistException("Artist cannot be null");
@@ -87,8 +87,7 @@ public class MusicLibraryService {
 	}
 
 	@Transactional
-	public void deleteArtist(Artist artist)
-			throws ArtistNotFoundException, dk.purplegreen.musiclibrary.service.InvalidArtistException {
+	public void deleteArtist(Artist artist) throws MusicLibraryServiceException {
 
 		artist = getArtist(artist.getId());
 
@@ -103,10 +102,10 @@ public class MusicLibraryService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<Album> getAlbums(Artist artist) throws ArtistNotFoundException {
-		
+	public List<Album> getAlbums(Artist artist) throws MusicLibraryServiceException {
+
 		artist = getArtist(artist.getId());
-		
+
 		if (log.isDebugEnabled()) {
 			log.debug("getAlbums() called for artist: " + artist.getName());
 		}
@@ -124,7 +123,7 @@ public class MusicLibraryService {
 	}
 
 	@Transactional(readOnly = true)
-	public Album getAlbum(Integer id) throws AlbumNotFoundException {
+	public Album getAlbum(Integer id) throws MusicLibraryServiceException {
 
 		if (log.isDebugEnabled()) {
 			log.debug("getAlbum() called with id: " + id);
@@ -145,7 +144,7 @@ public class MusicLibraryService {
 	}
 
 	@Transactional
-	public Album createAlbum(Album album) throws InvalidAlbumException {
+	public Album createAlbum(Album album) throws MusicLibraryServiceException {
 
 		if (album == null) {
 			throw new InvalidAlbumException("Album cannot be null");
@@ -162,7 +161,7 @@ public class MusicLibraryService {
 	}
 
 	@Transactional
-	public Album updateAlbum(Album album) throws AlbumNotFoundException, InvalidAlbumException {
+	public Album updateAlbum(Album album) throws MusicLibraryServiceException {
 
 		if (album == null) {
 			throw new InvalidAlbumException("Album cannot be null");
@@ -179,7 +178,7 @@ public class MusicLibraryService {
 	}
 
 	@Transactional
-	public void deleteAlbum(Album album) throws AlbumNotFoundException {
+	public void deleteAlbum(Album album) throws MusicLibraryServiceException {
 		if (log.isDebugEnabled()) {
 			log.debug("deleteAlbum() called with id: " + album.getId());
 		}
