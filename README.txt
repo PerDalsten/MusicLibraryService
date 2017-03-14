@@ -41,6 +41,7 @@ Copy $JAVA_HOME/db/lib/derbyclient.jar  to WLP server lib/derby
 		<properties.derby.client createDatabase="false" databaseName="musiclibrarydb" password="{xor}KzosKw==" user="musiclibrary"/>
 	</dataSource>	
 	
+    <cors allowedHeaders="Content-Type" allowedMethods="GET,POST,PUT,DELETE,HEAD,OPTIONS" allowedOrigins="http://localhost" domain="/MusicLibraryService/rest"/>
 	
 Wildfly:	
 
