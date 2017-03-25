@@ -70,7 +70,7 @@ public class AlbumDAO {
 		}
 
 		cq.select(album).where(predicates.toArray(new Predicate[predicates.size()]));
-		cq.orderBy(cb.asc(album.get("artist").get("name")), cb.asc(album.get("title")));
+		cq.orderBy(cb.asc(album.get("title")));
 
 		return em.createQuery(cq).getResultList();
 	}

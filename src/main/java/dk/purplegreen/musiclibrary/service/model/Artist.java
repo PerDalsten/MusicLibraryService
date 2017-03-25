@@ -46,4 +46,14 @@ public class Artist {
 	public void setName(String name) {
 		this.name = name;
 	}
+
+	@Override
+	public String toString() {
+
+		StringBuilder result = new StringBuilder("<");
+		result.append(id);
+		result.append("> ");
+		result.append(name);
+		return result.toString();
+	}
 }

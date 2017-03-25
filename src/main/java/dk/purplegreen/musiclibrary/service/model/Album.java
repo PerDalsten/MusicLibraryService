@@ -20,7 +20,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "ALBUM")
-@NamedQueries({ @NamedQuery(name = "findAllAlbums", query = "SELECT a FROM Album a"),
+@NamedQueries({ @NamedQuery(name = "findAllAlbums", query = "SELECT a FROM Album a ORDER BY a.title ASC"),
 		@NamedQuery(name = "findByArtist", query = "SELECT a FROM Album a WHERE a.artist = :artist"),
 		@NamedQuery(name = "findByTitle", query = "SELECT a FROM Album a WHERE a.title = :title") })
 public class Album {
@@ -93,5 +93,14 @@ public class Album {
 			song.setAlbum(this);
 		}
 		getSongs().add(song);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder result = new StringBuilder("<");
+		result.append(id);
+		result.append("> ");
+		result.append(title);
+		return result.toString();
 	}
 }

@@ -90,7 +90,7 @@ public class AlbumDAOTest {
 		});
 
 		List<Album> albums = albumDAO.find(null, null, null);
-		assertEquals("Wrong artist", "AC/DC", albums.get(0).getArtist().getName());
+		assertEquals("Wrong artist", "AC/DC", albums.get(1).getArtist().getName());
 
 	}
 
