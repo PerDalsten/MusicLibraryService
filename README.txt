@@ -23,7 +23,7 @@ Copy $JAVA_HOME/db/lib/derbyclient.jar $CATALINA_HOME/lib
 (and cp $JAVA_HOME/db/lib/derbyLocale*.jar $CATALINA_HOME/lib to avoid warnings).
 
 server.xml:
-    <Resource auth="Container" driverClassName="org.apache.derby.jdbc.ClientDriver" maxIdle="10" maxTotal="20" maxWaitMillis="-1" type="javax.sql.DataSource" url="jdbc:derby://localhost:1527/musiclibrarydb" name="jdbc/MusicLibraryDS" username="musiclibrary" password="test"  />
+    <Resource auth="Container" driverClassName="org.apache.derby.jdbc.ClientDriver" maxIdle="10" maxTotal="20" maxWaitMillis="-1" type="javax.sql.DataSource" url="jdbc:derby://localhost:1527/musiclibrarydb" name="jdbc/MusicLibraryDS" username="musiclibrary" password="musiclibrary"  />
 
 context.xml:
 	<ResourceLink  global="jdbc/MusicLibraryDS" name="jdbc/MusicLibraryDS" type="javax.sql.DataSource"/>
@@ -38,7 +38,7 @@ Copy $JAVA_HOME/db/lib/derbyclient.jar  to WLP server lib/derby
 	</library>
 	<dataSource jndiName="jdbc/MusicLibraryDS">
 		<jdbcDriver libraryRef="DerbyLib"/>
-		<properties.derby.client createDatabase="false" databaseName="musiclibrarydb" password="{xor}KzosKw==" user="musiclibrary"/>
+		<properties.derby.client createDatabase="false" databaseName="musiclibrarydb" password="{xor}MiosNjwzNj0tPi0m" user="musiclibrary"/>
 	</dataSource>	
 	
     <cors allowedHeaders="Content-Type" allowedMethods="GET,POST,PUT,DELETE,HEAD,OPTIONS" allowedOrigins="http://localhost" domain="/MusicLibraryService/rest"/>
@@ -52,6 +52,6 @@ Install $JAVA_HOME/db/lib/derbyclient.jar as module/driver 'derby'.
         <driver>derby</driver>
         <security>
         	<user-name>musiclibrary</user-name>
-            <password>test</password>
+            <password>musiclibrary</password>
         </security>
     </datasource>
