@@ -10,14 +10,14 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "ARTIST")
+@Table(name = "artist")
 @NamedQueries({ @NamedQuery(name = "findAllArtists", query = "SELECT a FROM Artist a ORDER BY a.name"),
 		@NamedQuery(name = "findByName", query = "SELECT a FROM Artist a WHERE a.name = :name") })
 public class Artist {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Column(name = "ARTIST_NAME", nullable = false)
+	@Column(name = "artist_name", nullable = false)
 	private String name;
 
 	public Artist() {

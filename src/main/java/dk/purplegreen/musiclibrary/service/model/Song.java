@@ -12,18 +12,18 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "SONG")
+@Table(name = "song")
 public class Song {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
-	@Column(name = "SONG_TITLE", nullable = false)
+	@Column(name = "song_title", nullable = false)
 	private String title;
 	private Integer track;
 	private Integer disc;
 	@ManyToOne
-	@JoinColumn(name = "ALBUM_ID", nullable = false)
+	@JoinColumn(name = "album_id", nullable = false)
 	private Album album;
 
 	public Song() {

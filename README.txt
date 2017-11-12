@@ -25,6 +25,10 @@ Copy $JAVA_HOME/db/lib/derbyclient.jar $CATALINA_HOME/lib
 server.xml:
     <Resource auth="Container" driverClassName="org.apache.derby.jdbc.ClientDriver" maxIdle="10" maxTotal="20" maxWaitMillis="-1" type="javax.sql.DataSource" url="jdbc:derby://localhost:1527/musiclibrarydb" name="jdbc/MusicLibraryDS" username="musiclibrary" password="musiclibrary"  />
 
+(For MySQL use <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxIdle="10" maxTotal="20" maxWaitMillis="-1" name="jdbc/MusicLibraryDS" password="musiclibrary" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/musiclibrarydb" username="musiclibrary"/> 
+and copy the MySQL JDBC driver jar to lib)
+
+
 context.xml:
 	<ResourceLink  global="jdbc/MusicLibraryDS" name="jdbc/MusicLibraryDS" type="javax.sql.DataSource"/>
 	
