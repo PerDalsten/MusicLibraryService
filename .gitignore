@@ -16,4 +16,7 @@ logs
 /.apt_generated/
 
 src/test/resources/database
-/.DS_Store
+**/.DS_Store
+
+.idea
+*.iml
