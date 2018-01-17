@@ -12,6 +12,15 @@ Logging: Add system property, e.g. for Tomcat:
 -Ddk.purplegreen.logdir="$HOME/Development/apache-tomcat-8.0.36/logs"
 
 
+MySQL: Add system property to override default Derby:
+
+<system-properties><property name="dk.purplegreen.logdir" value="${jboss.server.log.dir}"/></system-properties> (Wildfly standalone.xml)
+
+-Dhibernate.dialect=org.hibernate.dialect.MySQLDialect (Liberty jvm.properties)
+
+-Dhibernate.dialect=org.hibernate.dialect.MySQLDialect (Tomcat setenv.sh CATALINA_OPTS)
+    
+
 
 JNDI Data Source Setup
 ======================
