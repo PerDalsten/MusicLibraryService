@@ -11,26 +11,4 @@
 		<res-auth>Container</res-auth>
 	</resource-ref>
 
-    <!-- Uncomment when service deployed in Tomcat and client not deployed in same container -->
-    <!-- The cors.allowed.origins can be removed or set to * to allow access from anywhere-->
-    <!-- 
-	<filter>
-		<filter-name>CorsFilter</filter-name>
-		<filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
-		<init-param>
-			<param-name>cors.allowed.origins</param-name>
-			<param-value>http://localhost,http://localhost:9080,http://localhost:8080</param-value>
-		</init-param>
-		<init-param>
-			<param-name>cors.allowed.methods</param-name>
-			<param-value>GET,POST,HEAD,OPTIONS,PUT,DELETE</param-value>
-		</init-param>
-	</filter>
-	<filter-mapping>
-		<filter-name>CorsFilter</filter-name>
-		<url-pattern>/rest/*</url-pattern>
-	</filter-mapping>
-	-->
-    
-
 </web-app>

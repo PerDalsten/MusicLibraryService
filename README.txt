@@ -14,11 +14,13 @@ Logging: Add system property, e.g. for Tomcat:
 
 MySQL: Add system property to override default Derby:
 
-<system-properties><property name="dk.purplegreen.logdir" value="${jboss.server.log.dir}"/></system-properties> (Wildfly standalone.xml)
+<system-properties><property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/></system-properties> (Wildfly standalone.xml)
 
 -Dhibernate.dialect=org.hibernate.dialect.MySQLDialect (Liberty jvm.properties)
 
 -Dhibernate.dialect=org.hibernate.dialect.MySQLDialect (Tomcat setenv.sh CATALINA_OPTS)
+
+<system-property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"></system-property> (Glassfish domain.xml)
     
 
 
@@ -68,3 +70,17 @@ Install $JAVA_HOME/db/lib/derbyclient.jar as module/driver 'derby'.
             <password>musiclibrary</password>
         </security>
     </datasource>
+
+    
+Glassfish:
+
+    <jdbc-connection-pool datasource-classname="org.apache.derby.jdbc.ClientDataSource" name="MusicLibrary" res-type="javax.sql.DataSource">
+      <property name="PortNumber" value="1527"></property>
+      <property name="Password" value="musiclibrary"></property>
+      <property name="ServerName" value="localhost"></property>
+      <property name="ConnectionAttributes" value=";create=false"></property>
+      <property name="DatabaseName" value="musiclibrarydb"></property>
+      <property name="User" value="musiclibrary"></property>
+    </jdbc-connection-pool>
+    <jdbc-resource pool-name="MusicLibrary" jndi-name="jdbc/MusicLibraryDS"></jdbc-resource>
+    
