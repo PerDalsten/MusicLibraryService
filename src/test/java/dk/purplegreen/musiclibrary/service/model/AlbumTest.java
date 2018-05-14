@@ -81,9 +81,9 @@ public class AlbumTest {
 		List<Album> result = query.getResultList();
 		session.close();
 
-		assertEquals("Wrong number of albums", result.size(), 1);
+		assertEquals("Wrong number of albums", 1, result.size());
 		assertEquals("Wrong artist", "Royal Hunt", result.get(0).getArtist().getName());
-		assertEquals("Wrong number of songs", result.get(0).getSongs().size(), 2);
+		assertEquals("Wrong number of songs", 2, result.get(0).getSongs().size());
 	}
 
 	@Test
@@ -97,9 +97,9 @@ public class AlbumTest {
 		List<Album> result = query.getResultList();
 		session.close();
 
-		assertEquals("Wrong number of albums", result.size(), 1);
+		assertEquals("Wrong number of albums", 1, result.size());
 		assertEquals("Wrong artist", "Royal Hunt", result.get(0).getArtist().getName());
-		assertEquals("Wrong number of songs", result.get(0).getSongs().size(), 2);
+		assertEquals("Wrong number of songs", 2, result.get(0).getSongs().size());
 	}
 
 	@Test
