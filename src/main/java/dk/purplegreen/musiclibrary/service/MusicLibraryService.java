@@ -36,17 +36,16 @@ public class MusicLibraryService {
 
 	@Transactional(readOnly = true)
 	public List<Artist> getArtists() {
-		if (log.isDebugEnabled()) {
-			log.debug("getArtists() called");
-		}
+
+		log.debug("getArtists() called");
+
 		return artistDAO.getAllArtists();
 	}
 
 	@Transactional(readOnly = true)
 	public Artist getArtist(Integer id) throws MusicLibraryServiceException {
-		if (log.isDebugEnabled()) {
-			log.debug("getArtist() called with id: " + id);
-		}
+
+		log.debug("getArtist() called with id: {}", id);
 
 		Artist result = artistDAO.find(id);
 		if (result == null)
@@ -57,12 +56,10 @@ public class MusicLibraryService {
 	@Transactional
 	public Artist createArtist(Artist artist) throws MusicLibraryServiceException {
 
+		log.debug("createArtist() called with artist: {}", artist);
+
 		if (artist == null) {
 			throw new InvalidArtistException("Artist cannot be null");
-		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("createArtist called with artist: " + artist.getName());
 		}
 
 		artist.setId(null);
@@ -73,12 +70,10 @@ public class MusicLibraryService {
 	@Transactional
 	public Artist updateArtist(Artist artist) throws MusicLibraryServiceException {
 
+		log.debug("updateArtist() called with artist: {}", artist);
+
 		if (artist == null) {
 			throw new InvalidArtistException("Artist cannot be null");
-		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("updateArtist called with artist: " + artist.getId() + "-" + artist.getName());
 		}
 
 		getArtist(artist.getId());
@@ -89,35 +84,31 @@ public class MusicLibraryService {
 	@Transactional
 	public void deleteArtist(Artist artist) throws MusicLibraryServiceException {
 
+		log.debug("deleteArtist() called with artist: {}", artist);
+
 		artist = getArtist(artist.getId());
 
 		if (albumDAO.getArtistAlbumCount(artist) > 0) {
 			throw new InvalidArtistException("Artist has albums and cannot be deleted");
 		}
 
-		if (log.isDebugEnabled()) {
-			log.debug("deleteArtist() called with id: " + artist.getId());
-		}
 		artistDAO.delete(artist);
 	}
 
 	@Transactional(readOnly = true)
 	public List<Album> getAlbums(Artist artist) throws MusicLibraryServiceException {
 
+		log.debug("getAlbums() called for artist: {}", artist);
+
 		artist = getArtist(artist.getId());
 
-		if (log.isDebugEnabled()) {
-			log.debug("getAlbums() called for artist: " + artist.getName());
-		}
 		return albumDAO.findByArtist(artist);
 	}
 
 	@Transactional(readOnly = true)
 	public List<Album> findAlbums(String artist, String title, Integer year) {
 
-		if (log.isDebugEnabled()) {
-			log.debug("findAlbums called: artist=" + artist + ", title=" + title + ", year=" + year);
-		}
+		log.debug("findAlbums() called: artist={}, title={}, year={}", artist, title, year);
 
 		return albumDAO.find(artist, title, year);
 	}
@@ -125,9 +116,7 @@ public class MusicLibraryService {
 	@Transactional(readOnly = true)
 	public Album getAlbum(Integer id) throws MusicLibraryServiceException {
 
-		if (log.isDebugEnabled()) {
-			log.debug("getAlbum() called with id: " + id);
-		}
+		log.debug("getAlbum() called with id: {}", id);
 
 		Album result = albumDAO.find(id);
 		if (result == null)
@@ -137,21 +126,19 @@ public class MusicLibraryService {
 
 	@Transactional(readOnly = true)
 	public List<Album> getAlbums() {
-		if (log.isDebugEnabled()) {
-			log.debug("getAlbums() called");
-		}
+
+		log.debug("getAlbums() called");
+
 		return albumDAO.getAllAlbums();
 	}
 
 	@Transactional
 	public Album createAlbum(Album album) throws MusicLibraryServiceException {
 
+		log.debug("createAlbum() called with album: {}", album);
+
 		if (album == null) {
 			throw new InvalidAlbumException("Album cannot be null");
-		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("createAlbum called with artist: " + album.getTitle());
 		}
 
 		album.setId(null);
@@ -163,12 +150,10 @@ public class MusicLibraryService {
 	@Transactional
 	public Album updateAlbum(Album album) throws MusicLibraryServiceException {
 
+		log.debug("updateAlbum() called with album: {}", album);
+
 		if (album == null) {
 			throw new InvalidAlbumException("Album cannot be null");
-		}
-
-		if (log.isDebugEnabled()) {
-			log.debug("updateAlbum called with album: " + album.getId() + "-" + album.getTitle());
 		}
 
 		getAlbum(album.getId());
@@ -179,9 +164,9 @@ public class MusicLibraryService {
 
 	@Transactional
 	public void deleteAlbum(Album album) throws MusicLibraryServiceException {
-		if (log.isDebugEnabled()) {
-			log.debug("deleteAlbum() called with id: " + album.getId());
-		}
+
+		log.debug("deleteAlbum() called with album: {}", album);
+
 		albumDAO.delete(getAlbum(album.getId()));
 	}
 

@@ -21,8 +21,8 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(value = { AlbumNotFoundException.class, ArtistNotFoundException.class })
 	protected ResponseEntity<Object> handleNotFound(Exception ex, WebRequest request) {
-		if (log.isInfoEnabled())
-			log.info("Not found", ex);
+
+		log.info("Not found", ex);
 		return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 	}
 
