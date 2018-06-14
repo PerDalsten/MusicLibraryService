@@ -1,3 +1,11 @@
+Application server versions
+===========================
+
+Tomcat 8.5.31
+Websphere Liberty 17.0.0.4
+Wildfly 11.0.0.Final
+Glassfish 4.1.2
+
 Project creation
 ================
 
@@ -9,7 +17,11 @@ Fix pom.xml (add Java Servlet API, fix Junit version, compiler level, etc.) and 
 
 Logging: Add system property, e.g. for Tomcat:
 
--Ddk.purplegreen.logdir="$HOME/Development/apache-tomcat-8.0.36/logs"
+-Ddk.purplegreen.logdir="$HOME/Development/apache-tomcat-8.5.31/logs"
+
+or in setenv.sh:
+
+export CATALINA_OPTS="$CATALINA_OPTS -Ddk.purplegreen.logdir=../logs"
 
 
 MySQL: Add system property to override default Derby:
