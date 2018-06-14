@@ -5,6 +5,7 @@ Tomcat 8.5.31
 Websphere Liberty 17.0.0.4
 Wildfly 11.0.0.Final
 Glassfish 4.1.2
+Jetty 9.4.11.v20180605
 
 Project creation
 ================
@@ -68,7 +69,6 @@ Copy $JAVA_HOME/db/lib/derbyclient.jar  to WLP server lib/derby
 		<properties.derby.client createDatabase="false" databaseName="musiclibrarydb" password="{xor}MiosNjwzNj0tPi0m" user="musiclibrary"/>
 	</dataSource>	
 	
-    <cors allowedHeaders="Content-Type" allowedMethods="GET,POST,PUT,DELETE,HEAD,OPTIONS" allowedOrigins="http://localhost" domain="/MusicLibraryService/rest"/>
 	
 Wildfly:	
 
@@ -95,4 +95,26 @@ Glassfish:
       <property name="User" value="musiclibrary"></property>
     </jdbc-connection-pool>
     <jdbc-resource pool-name="MusicLibrary" jndi-name="jdbc/MusicLibraryDS"></jdbc-resource>
+    
+
+Jetty:
+
+Copy $JAVA_HOME/db/lib/derbyclient.jar (+ locale jars) to Jetty server lib/ext
+
+Add to jetty.xml:
+
+    <!--Datasources -->
+    <New id="MusicLibraryDS" class="org.eclipse.jetty.plus.jndi.Resource">
+     <Arg></Arg>
+     <Arg>jdbc/MusicLibraryDS</Arg>
+     <Arg>
+       <New class="org.apache.derby.jdbc.ClientDataSource">
+	   <Set name="DatabaseName">musiclibrarydb</Set>
+           <Set name="ServerName">localhost</Set>
+	       <Set name="PortNumber">1527</Set>
+           <Set name="User">musiclibrary</Set>
+           <Set name="Password">musiclibrary</Set>
+        </New>
+     </Arg>
+    </New>    
     
