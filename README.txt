@@ -116,5 +116,20 @@ Add to jetty.xml:
            <Set name="Password">musiclibrary</Set>
         </New>
      </Arg>
-    </New>    
+    </New> 
+    
+For MySQL use:
+
+    <New id="MusicLibraryDS" class="org.eclipse.jetty.plus.jndi.Resource">
+     <Arg></Arg>
+     <Arg>jdbc/MusicLibraryDS</Arg>
+     <Arg>
+       <New class="com.mysql.jdbc.jdbc2.optional.MysqlDataSource">
+	   <Set name="DatabaseName">musiclibrarydb</Set>
+           <Set name="Url">jdbc:mysql://localhost:3306/musiclibrarydb</Set>
+           <Set name="User">musiclibrary</Set>
+           <Set name="Password">musiclibrary</Set>
+        </New>
+     </Arg>
+    </New>           
     
