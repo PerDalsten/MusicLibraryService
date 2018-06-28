@@ -35,6 +35,9 @@ MySQL: Add system property to override default Derby:
 
 <system-property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"></system-property> (Glassfish domain.xml)
     
+hibernate.dialect=org.hibernate.dialect.HSQLDialect (Jetty start.ini)    
+
+For HyperSQL use: hibernate.dialect=org.hibernate.dialect.HSQLDialect 
 
 
 JNDI Data Source Setup
@@ -52,6 +55,9 @@ server.xml:
 (For MySQL use <Resource auth="Container" driverClassName="com.mysql.jdbc.Driver" maxIdle="10" maxTotal="20" maxWaitMillis="-1" name="jdbc/MusicLibraryDS" password="musiclibrary" type="javax.sql.DataSource" url="jdbc:mysql://localhost:3306/musiclibrarydb" username="musiclibrary"/> 
 and copy the MySQL JDBC driver jar to lib)
 
+(For HyperSQL use
+<Resource auth="Container" driverClassName="org.hsqldb.jdbc.JDBCDriver" maxIdle="10" maxTotal="20" maxWaitMillis="-1" name="jdbc/MusicLibraryDS" password="musiclibrary" type="javax.sql.DataSource" url="jdbc:hsqldb:hsql://localhost/musiclibrarydb" username="musiclibrary"/>
+and copy the HyperSQL JDBC driver jar to lib)
 
 context.xml:
 	<ResourceLink  global="jdbc/MusicLibraryDS" name="jdbc/MusicLibraryDS" type="javax.sql.DataSource"/>
@@ -118,7 +124,7 @@ Add to jetty.xml:
      </Arg>
     </New> 
     
-For MySQL use:
+For MySQL copy driver and use:
 
     <New id="MusicLibraryDS" class="org.eclipse.jetty.plus.jndi.Resource">
      <Arg></Arg>
@@ -132,4 +138,18 @@ For MySQL use:
         </New>
      </Arg>
     </New>           
-    
+   
+ 
+For HyperSQL copy driver and use:
+
+    <New id="MusicLibraryDS" class="org.eclipse.jetty.plus.jndi.Resource">
+     <Arg></Arg>
+     <Arg>jdbc/MusicLibraryDS</Arg>
+     <Arg>
+       <New class="org.hsqldb.jdbc.JDBCDataSource">
+	   <Set name="Url">jdbc:hsqldb:hsql://localhost/musiclibrarydb</Set>
+           <Set name="User">musiclibrary</Set>
+           <Set name="Password">musiclibrary</Set>
+        </New>
+     </Arg>
+    </New>  
