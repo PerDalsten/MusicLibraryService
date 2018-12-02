@@ -5,7 +5,9 @@ Tomcat 8.5.31
 Websphere Liberty 17.0.0.4
 Wildfly 11.0.0.Final
 Glassfish 4.1.2
+TomEE Plus 7.0.4
 Jetty 9.4.11.v20180605
+
 
 Project creation
 ================

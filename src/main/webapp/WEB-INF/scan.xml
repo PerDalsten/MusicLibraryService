@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<!-- TomEE will complain of missing persistence.xml if allowed to scan default classes. We just need to initialize Spring. -->
+<scan>
+	<packages>
+		<package>dk.purplegreen.musiclibrary.service.rest</package>
+	</packages>
+</scan>
+
