@@ -20,7 +20,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "album")
-@NamedQueries({ @NamedQuery(name = "findAllAlbums", query = "SELECT a FROM Album a ORDER BY a.title ASC"),
+@NamedQueries({ @NamedQuery(name = "findAllAlbums", query = "SELECT a FROM Album a ORDER BY a.title ASC, a.artist.name ASC"),
 		@NamedQuery(name = "findByArtist", query = "SELECT a FROM Album a WHERE a.artist = :artist"),
 		@NamedQuery(name = "findByTitle", query = "SELECT a FROM Album a WHERE a.title = :title") })
 public class Album {
