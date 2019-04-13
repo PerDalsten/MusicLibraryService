@@ -47,9 +47,9 @@ JNDI Data Source Setup
 
 Tomcat:
 
-Copy $JAVA_HOME/db/lib/derbyclient.jar $CATALINA_HOME/lib
+Copy $DERBY_HOME/lib/derbyclient.jar $CATALINA_HOME/lib
 
-(and cp $JAVA_HOME/db/lib/derbyLocale*.jar $CATALINA_HOME/lib to avoid warnings).
+(and cp $DERBY_HOME/lib/derbyLocale*.jar $CATALINA_HOME/lib to avoid warnings).
 
 server.xml:
     <Resource auth="Container" driverClassName="org.apache.derby.jdbc.ClientDriver" maxIdle="10" maxTotal="20" maxWaitMillis="-1" type="javax.sql.DataSource" url="jdbc:derby://localhost:1527/musiclibrarydb" name="jdbc/MusicLibraryDS" username="musiclibrary" password="musiclibrary"  />
@@ -67,7 +67,7 @@ context.xml:
 	
 Liberty:
 
-Copy $JAVA_HOME/db/lib/derbyclient.jar  to WLP server lib/derby  
+Copy $DERBY_HOME/lib/derbyclient.jar  to WLP server lib/derby  
 
 	<library id="DerbyLib">
 		<fileset dir="${server.config.dir}/lib/derby" includes="*.jar"/>
@@ -80,7 +80,7 @@ Copy $JAVA_HOME/db/lib/derbyclient.jar  to WLP server lib/derby
 	
 Wildfly:	
 
-Install $JAVA_HOME/db/lib/derbyclient.jar as module/driver 'derby'.
+Install $DERBY_HOME/lib/derbyclient.jar as module/driver 'derby'.
 
     <datasource jndi-name="java:/jdbc/MusicLibraryDS" pool-name="MusicLibrary">
 		<connection-url>jdbc:derby://localhost:1527/musiclibrarydb</connection-url>
@@ -107,7 +107,7 @@ Glassfish:
 
 Jetty:
 
-Copy $JAVA_HOME/db/lib/derbyclient.jar (+ locale jars) to Jetty server lib/ext
+Copy $DERBY_HOME/lib/derbyclient.jar (+ locale jars) to Jetty server lib/ext
 
 Add to jetty.xml:
 

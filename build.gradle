@@ -14,8 +14,8 @@ repositories {
 
 ext {
 	log4jVersion = '2.8.2'
-	springVersion = '5.1.1.RELEASE'
-	hibernateVersion = '5.3.7.Final'
+	springVersion = '5.1.6.RELEASE'
+	hibernateVersion = '5.4.2.Final'
 }
 
 dependencies {
@@ -28,10 +28,10 @@ dependencies {
     compile "org.springframework:spring-tx:${springVersion}"
     compile "org.springframework:spring-orm:${springVersion}"
     compile "org.hibernate:hibernate-core:${hibernateVersion}"
-    compile "com.fasterxml.jackson.core:jackson-databind:2.9.7"
+    compile "com.fasterxml.jackson.core:jackson-databind:2.9.8"
 
     testCompile "junit:junit:4.12"
-    testCompile "org.mockito:mockito-core:2.23.0"
+    testCompile "org.mockito:mockito-core:2.26.0"
     testCompile "org.springframework:spring-test:${springVersion}"
     testCompile "com.jayway.jsonpath:json-path:2.4.0"
     
